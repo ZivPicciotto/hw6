@@ -12,12 +12,13 @@ def get_random_centroids(X, k):
     ###########################################################################
     # TODO: Implement the function.                                           #
     ###########################################################################
-    pass
+    indexes = np.random.choice([i for i in range(len(X))], k, replace=False)
+    centroids = [X[i] for i in indexes]
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
     # make sure you return a numpy array
-    return np.asarray(centroids).astype(np.float) 
+    return np.asarray(centroids).astype(float) 
 
 def lp_distance(X, centroids, p=2):
     '''
@@ -34,7 +35,8 @@ def lp_distance(X, centroids, p=2):
     ###########################################################################
     # TODO: Implement the function.                                           #
     ###########################################################################
-    pass
+    image_reshaped = X[:, np.newaxis, :]
+    distances = np.linalg.norm(image_reshaped-centroids, ord=p,axis=2).T 
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -57,7 +59,15 @@ def kmeans(X, k, p ,max_iter=100):
     ###########################################################################
     # TODO: Implement the function.                                           #
     ###########################################################################
-    pass
+    centroids = get_random_centroids(X, k)
+    for _ in range(max_iter):
+        distances = lp_distance(X,centroids, p)
+        classes = np.argmin(distances,axis=0)
+        prev = centroids
+        centroids = np.array([np.mean(X[classes==i,:],axis=0) for i in range(k)])
+
+        if np.all(prev== centroids):
+            break 
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
@@ -81,7 +91,7 @@ def kmeans_pp(X, k, p ,max_iter=100):
     ###########################################################################
     # TODO: Implement the function.                                           #
     ###########################################################################
-    pass
+    pass 
     ###########################################################################
     #                             END OF YOUR CODE                            #
     ###########################################################################
