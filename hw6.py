@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_random_centroids(X, k):
+def get_random_centroids(X, k, rand):
     '''
     Each centroid is a point in RGB space (color) in the image. 
     This function should uniformly pick `k` centroids from the dataset.
@@ -12,6 +12,7 @@ def get_random_centroids(X, k):
     ###########################################################################
     # TODO: Implement the function.                                           #
     ###########################################################################
+    np.random.seed(rand)
     indexes = np.random.choice([i for i in range(len(X))], k, replace=False)
     centroids = [X[i] for i in indexes]
     ###########################################################################
@@ -92,7 +93,12 @@ def kmeans_pp(X, k, p ,max_iter=100):
     ###########################################################################
     return centroids, classes
 
-def kmeans_pp_centroid(X, k, p) -> np.ndarray:
+"""
+This is a helper function to compute the initial centroids.
+Also note that rand refers to a seed, used later for fair comparisson.
+"""
+def kmeans_pp_centroid(X, k, p, rand) -> np.ndarray:
+    np.random.seed(rand)
     chosen_indexes = [np.random.choice(range(len(X)))]
     centroids = [X[chosen_indexes[0], :]]
 
@@ -116,10 +122,11 @@ def kmeans_pp_centroid(X, k, p) -> np.ndarray:
 this function does exactly as out original kmeans_pp implementation
 however we wanted to display the number of itterations in a later section
 so in order to not change the original return value of kmeans_pp we made this
-helper function
+helper function.
+This function also recieves rand, which serves as a seed for fair comparrison
 """
-def kmeans_with_itteration_count(X, k, p ,max_iter=100):
-    centroids = get_random_centroids(X, k)
+def kmeans_with_itteration_count(X, k, p ,max_iter=100, rand=1):
+    centroids = get_random_centroids(X, k, rand)
     itterations = 0
     for _ in range(max_iter):
         itterations+=1
@@ -138,10 +145,11 @@ this function does exactly as out original kmeans implementation
 however we wanted to display the number of itterations in a later section
 so in order to not change the original return value of kmeans we made this
 helper function
+This function also recieves rand, which serves as a seed for fair comparrison
 """
-def kmeans_pp_with_itteration_count(X, k, p ,max_iter=100):
+def kmeans_pp_with_itteration_count(X, k, p ,max_iter=100, rand=1):
     itterations = 0
-    centroids = kmeans_pp_centroid(X,k, p)
+    centroids = kmeans_pp_centroid(X,k, p, rand)
     for _ in range(max_iter):
         itterations += 1
         distances = lp_distance(X,centroids, p)
